@@ -10,12 +10,24 @@ SSE.ServerSentEvent = (function($) {
 			this.uri = uri;
 
 			eventSource = new EventSource(this.uri);
-			source.onmessage = this.onmessage;
+			eventSource.addEventListener("message", this.message, false);
+			eventSource.addEventListener("open", this.open, false);
+			eventSource.addEventListener("error", this.error, false);
         },
 
-        "onmessage" = function (event) {
+        "message" = function (e) {
 			document.body.innerHTML += "Received data: " + event.data + " at " + Date() + " <br>";
-		};
+		},
+
+		"open" = function (e)_{
+			document.body.innerHTML += "Opened connection at " + this.uri;
+		},
+
+		"error" = function (e) {
+			if (e.readyState == EventSource.CLOSED) {
+    			console.error(e);
+  			}
+		}
 
 	};
 
